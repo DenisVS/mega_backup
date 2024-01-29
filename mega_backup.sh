@@ -8,12 +8,25 @@
 MEGATOOLS_PATH='/cygdrive/c/PF/megatools-1.11.1.20230212-win64/megatools.exe'
 MEGA_CREDENTIALS_PATH='/cygdrive/c/PF/megatools-1.11.1.20230212-win64/mega.ini'
 MEGA_BACKUP_PATHS='/cygdrive/c/PF/megatools-1.11.1.20230212-win64/mega_server_backup_paths.ini'
-MEGA_CLOUD_PATH="/Root/Backups/ServerModularWin"  # Root for all backups
+MEGA_CLOUD_PATH="/Root/Backups/ServerModularWin2"  # Root for all backups
 
 DATE=$(date "+%Y%m%d_%H%M")
 USERNAME=$(cat "$MEGA_CREDENTIALS_PATH" | grep Username | awk -F \= '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 PASSWORD=$(cat "$MEGA_CREDENTIALS_PATH" | grep Password | awk -F \= '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 echo  u "$USERNAME"   p "$PASSWORD" 
+
+# Arrays of elements for backup from config file
+BACKUP_OBJECT_1=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($3==0)  print $1 "|" $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+BACKUP_OBJECT_1=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($3==1)  print $1 "|" $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+
+echo 0 $BACKUP_OBJECT_0
+echo 1 $BACKUP_OBJECT_1 # OBJECT for copy non dated dirs
+
+
+
+
+
+
 ### analog of mkdir -p
 PATH_BEFORE_ACTUAL_DIR=""
 $MEGATOOLS_PATH test -u "$USERNAME" -p "$PASSWORD" -d  --reload "/Root"        ## Refresh cache
@@ -35,11 +48,7 @@ done
 PATH_BEFORE_ACTUAL_DIR=$MEGA_CLOUD_PATH
 $MEGATOOLS_PATH mkdir  -u "$USERNAME" -p "$PASSWORD" "$PATH_BEFORE_ACTUAL_DIR/$DATE"
 
-# Arrays of paths
-PATHS_0=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($2==0)  print $1}')
-PATHS_1=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($2==1)  print $1}')
-echo 0 $PATHS_0
-echo 1 $PATHS_1 # Path for copy non dated dirs
+
 #exit
 
 #################################################
@@ -47,7 +56,15 @@ echo 1 $PATHS_1 # Path for copy non dated dirs
 SAVEIFS=${IFS}
 IFS='
 '
-for CURRENT_PATH in ${PATHS_1}; do
+
+
+
+
+
+for CURRENT_ELEMENT in ${BACKUP_OBJECT_1}; do
+  CURRENT_PATH=$(echo $CURRENT_ELEMENT | awk -F "|" '{print $1}')
+
+
   echo Current Path \(Subroot where our non dated dirs contain\) $CURRENT_PATH
   LAST_DIR=$(echo $CURRENT_PATH | awk -F "/" '{print $NF}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
   echo Last dir: $LAST_DIR # To create subroot for non dated dirs
@@ -90,7 +107,11 @@ done
 
 #################################################
 # Create dirs and copy there content by date.
-for CURRENT_PATH in ${PATHS_0}; do
+
+
+for CURRENT_ELEMENT in ${BACKUP_OBJECT_0}; do
+  CURRENT_PATH=$(echo $CURRENT_ELEMENT | awk -F "|" '{print $1}')
+echo rrrr
   echo $CURRENT_PATH
   LAST_DIR=$(echo $CURRENT_PATH | awk -F "/" '{print $NF}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
   $MEGATOOLS_PATH mkdir -u "$USERNAME" -p "$PASSWORD"  "$PATH_BEFORE_ACTUAL_DIR/$DATE/$LAST_DIR"

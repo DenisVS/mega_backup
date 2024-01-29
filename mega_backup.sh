@@ -8,7 +8,7 @@
 MEGATOOLS_PATH='/cygdrive/c/PF/megatools-1.11.1.20230212-win64/megatools.exe'
 MEGA_CREDENTIALS_PATH='/cygdrive/c/PF/megatools-1.11.1.20230212-win64/mega.ini'
 MEGA_BACKUP_PATHS='/cygdrive/c/PF/megatools-1.11.1.20230212-win64/mega_server_backup_paths.ini'
-MEGA_CLOUD_PATH="/Root/Backups/ServerModularWin"
+MEGA_CLOUD_PATH="/Root/Backups/ServerModularWin"  # Root for all backups
 
 DATE=$(date "+%Y%m%d_%H%M")
 USERNAME=$(cat "$MEGA_CREDENTIALS_PATH" | grep Username | awk -F \= '{print $2}')
@@ -39,7 +39,7 @@ $MEGATOOLS_PATH mkdir "$PATH_BEFORE_ACTUAL_DIR/$DATE"
 PATHS_0=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($2==0)  print $1}')
 PATHS_1=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($2==1)  print $1}')
 echo 0 $PATHS_0
-echo 1 $PATHS_1
+echo 1 $PATHS_1 # Path for copy non dated dirs
 #exit
 
 #################################################
@@ -48,12 +48,13 @@ SAVEIFS=${IFS}
 IFS='
 '
 for CURRENT_PATH in ${PATHS_1}; do
-  echo Current Path $CURRENT_PATH
+  echo Current Path \(Subroot where our non dated dirs contain\) $CURRENT_PATH
   LAST_DIR=$(echo $CURRENT_PATH | awk -F "/" '{print $NF}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-  echo Last dir: $LAST_DIR
-  echo Mega cloud path: $MEGA_CLOUD_PATH
+  echo Last dir: $LAST_DIR # To create subroot for non dated dirs
+  echo Mega cloud path \(Root for our backups\): $MEGA_CLOUD_PATH
 
-  #create dir for not by date backups
+  #test and create dir for not by date backups
+echo Test new subroot before create "${MEGA_CLOUD_PATH}/${LAST_DIR}"
   $MEGATOOLS_PATH test -d "${MEGA_CLOUD_PATH}/${LAST_DIR}"
   TEST="$?"
   echo test $TEST
@@ -61,20 +62,26 @@ for CURRENT_PATH in ${PATHS_1}; do
     echo Dir exists
   else
     echo Let\'s make "${MEGA_CLOUD_PATH}/${LAST_DIR}"
-    $MEGATOOLS_PATH mkdir "${MEGA_CLOUD_PATH}/${LAST_DIR}"
+    $MEGATOOLS_PATH mkdir "${MEGA_CLOUD_PATH}/${LAST_DIR}" # Create subroot dir for non dated dirs
   fi
 
   LOCAL_DIRS_TO_BACKUP=$(find $CURRENT_PATH -maxdepth 1 -mindepth 1 -type d | awk -F \/ '{print $NF}')
   ### Cycle all dirs in folders
   for CURRENT_DIR_TO_BACKUP in ${LOCAL_DIRS_TO_BACKUP}; do
+  echo Testing CURRENT_DIR_TO_BACKUP dir under subroot before create "$CURRENT_DIR_TO_BACKUP"
     $MEGATOOLS_PATH test -d "${MEGA_CLOUD_PATH}/${LAST_DIR}/${CURRENT_DIR_TO_BACKUP}"
     TEST="$?"
     echo test $TEST
     if [ "$TEST" = 0 ]; then
       echo Dir exists
     else
-      echo Let\'s copy "${MEGA_CLOUD_PATH}/${LAST_DIR}/${CURRENT_DIR_TO_BACKUP}"
-      $MEGATOOLS_PATH copy --local "${CURRENT_PATH}/${CURRENT_DIR_TO_BACKUP}" --remote "${MEGA_CLOUD_PATH}/${LAST_DIR}"
+      echo Let\'s copy  "${CURRENT_PATH}/${CURRENT_DIR_TO_BACKUP}" to "${MEGA_CLOUD_PATH}/${LAST_DIR}/${CURRENT_DIR_TO_BACKUP}"
+      echo $MEGATOOLS_PATH copy --local  "${CURRENT_PATH}/${CURRENT_DIR_TO_BACKUP}" --remote "${MEGA_CLOUD_PATH}/${LAST_DIR}/${CURRENT_DIR_TO_BACKUP}"
+      $MEGATOOLS_PATH mkdir "${MEGA_CLOUD_PATH}/${LAST_DIR}/${CURRENT_DIR_TO_BACKUP}" # Create CURRENT_DIR_TO_BACKUP (curent non dated dir)
+
+      $MEGATOOLS_PATH copy --local "${CURRENT_PATH}/${CURRENT_DIR_TO_BACKUP}" --remote "${MEGA_CLOUD_PATH}/${LAST_DIR}/${CURRENT_DIR_TO_BACKUP}"
+      #exit ###########################################################################
+
     fi
 
   done

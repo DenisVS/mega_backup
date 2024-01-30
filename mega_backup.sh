@@ -49,9 +49,7 @@ for CURRENT_ELEMENT in ${BACKUP_OBJECT_1}; do
   _mega_mkdir_p "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH/$DATE"
   PATH=$(echo /usr/local/bin:/usr/bin)
   echo sent "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH--"$DATE"---> function copy"
-
   _mega_copy_if_not_exist "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH" "$DATE"
-  #_mega_copy_if_not_exist "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH" "rrrrr"
   PATH=$(echo /usr/local/bin:/usr/bin)
 
   echo -------------------------

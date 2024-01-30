@@ -5,12 +5,12 @@ PATH=$(echo /usr/local/bin:/usr/bin)
 ### function mkdir_p
 _mega_mkdir_p() {
 
-  MT_PATH=$1
-  UNAME=$2
-  PSSWD=$3
-  DIRN=$4
-  #  PATH_ARRAY=$(echo $DIRN | tr "/" " ")
-  PATH_ARRAY=$(echo "$DIRN" | tr "/" "\n") #MEGA path splitted
+  MSP=$1 # Megatool Software Path
+  USER=$2 # User login
+  PWD=$3 # User password
+  MUP=$4 # Megaupload path
+  #  PATH_ARRAY=$(echo $MUP | tr "/" " ")
+  PATH_ARRAY=$(echo "$MUP" | tr "/" "\n") #MEGA path splitted
   PATH=""
 
   echo PATH_ARRAY $PATH_ARRAY
@@ -21,16 +21,16 @@ _mega_mkdir_p() {
     #IFS=${SAVEIFS}
     PATH="$PATH/$LAST_DIR"
 
-    $MT_PATH test -u "$UNAME" -p "$PSSWD" -d  --reload "/Root" ## Refresh cache
-    $MT_PATH test -u "$UNAME" -p "$PSSWD" -d "${PATH}"
+    $MSP test -u "$USER" -p "$PWD" -d  --reload "/Root" ## Refresh cache
+    $MSP test -u "$USER" -p "$PWD" -d "${PATH}"
     TEST="$?"
     echo test $TEST
     if [ "$TEST" = 0 -o $PATH = '/Root' ]; then
       echo Dir exists
     else
       echo Let\'s make $PATH
-      echo $MT_PATH mkdir -u "$UNAME" -p "$PSSWD" "$PATH"
-      $MT_PATH mkdir -u "$UNAME" -p "$PSSWD" "$PATH"
+      echo $MSP mkdir -u "$USER" -p "$PWD" "$PATH"
+      $MSP mkdir -u "$USER" -p "$PWD" "$PATH"
     fi
 
   done
@@ -44,16 +44,15 @@ _mega_mkdir_p() {
 ###################################################
 ### function _mega_copy_if_not_exist
 _mega_copy_if_not_exist() {
-
-  MT_PATH=$1
-  UNAME=$2
-  PSSWD=$3
-  DIRN="$4"
-  DIRL="$5"
-  LSDIR="$6"
-  #echo $LSDIR LSDIR
-  #  PATH_ARRAY=$(echo $DIRN | tr "/" " ")
-  PATH_ARRAY=$(echo "$DIRN" | tr "/" "\n") #MEGA path splitted
+  MSP=$1 # Megatool Software Path
+  USER=$2 # User login
+  PWD=$3 # User password
+  MUP=$4 # Megaupload path
+  LPTH="$5" #Local Path 
+  LSD="$6"  # Last dir, under which will be copy. Usually date.
+  #echo $LSD LSD
+  #  PATH_ARRAY=$(echo $MUP | tr "/" " ")
+  PATH_ARRAY=$(echo "$MUP" | tr "/" "\n") #MEGA path splitted
   PATH=""
 
   echo PATH_ARRAY $PATH_ARRAY
@@ -67,8 +66,8 @@ _mega_copy_if_not_exist() {
     BEFORE_LAST="$PATH"
     PATH="$PATH/$LAST_DIR"
     echo Path $PATH
-    $MT_PATH test -u "$UNAME" -p "$PSSWD" -d  --reload "/Root" ## Refresh cache
-    $MT_PATH test -u "$UNAME" -p "$PSSWD" -d "${PATH}"
+    $MSP test -u "$USER" -p "$PWD" -d  --reload "/Root" ## Refresh cache
+    $MSP test -u "$USER" -p "$PWD" -d "${PATH}"
     TEST="$?"
     echo test $TEST
     if [ "$TEST" = 0 -o "$PATH" = '/Root' ]; then
@@ -76,22 +75,18 @@ _mega_copy_if_not_exist() {
     else
       echo Let\'s copy $PATH
       echo BEFORE_LAST "${BEFORE_LAST}"
-      $MT_PATH mkdir -u "$UNAME" -p "$PSSWD" "${BEFORE_LAST}/${LAST_DIR}"
-      echo copy --local "${DIRL}/${LAST_DIR}" --remote "${BEFORE_LAST}"
-      $MT_PATH copy -u "$UNAME" -p "$PSSWD" --local "${DIRL}/${LAST_DIR}" --remote "${BEFORE_LAST}/${LAST_DIR}"
+      $MSP mkdir -u "$USER" -p "$PWD" "${BEFORE_LAST}/${LAST_DIR}"
+      echo copy --local "${LPTH}/${LAST_DIR}" --remote "${BEFORE_LAST}"
+      $MSP copy -u "$USER" -p "$PWD" --local "${LPTH}/${LAST_DIR}" --remote "${BEFORE_LAST}/${LAST_DIR}"
 
     fi
-
   done
-  if [ -n "$LSDIR"  -a "$PATH" = "$DIRN" ]; then
-      echo copy --local "${DIRL}" --remote "${BEFORE_LAST}"
-      $MT_PATH copy -u "$UNAME" -p "$PSSWD" --local "${DIRL}" --remote "${BEFORE_LAST}/${LAST_DIR}/${LSDIR}"
+  if [ -n "$LSD"  -a "$PATH" = "$MUP" ]; then
+      echo copy --local "${LPTH}" --remote "${BEFORE_LAST}"
+      $MSP copy -u "$USER" -p "$PWD" --local "${LPTH}" --remote "${BEFORE_LAST}/${LAST_DIR}/${LSD}"
   else
       echo Nista!
   fi
-
-
-  
 
   echo return PATH $PATH
   echo return BEFORE_LAST $BEFORE_LAST

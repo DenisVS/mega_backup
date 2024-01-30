@@ -6,8 +6,10 @@
 # c:/Users/master/Documents/Projects|/Root/Backup2|0    copy every directories into new DATE-TIME directory
 #PATH=$(echo /usr/local/bin:/usr/bin)
 
-. ./config.sh
-. ./functions.sh
+#. ./config.sh
+#. ./functions.sh
+source "$(dirname "$0")/config.sh"
+source "$(dirname "$0")/functions.sh"
 
 SAVEIFS=${IFS}
 IFS='

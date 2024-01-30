@@ -11,7 +11,7 @@ _mega_mkdir_p() {
   MUP=$4 # Megaupload path
   #  PATH_ARRAY=$(echo $MUP | tr "/" " ")
   PATH_ARRAY=$(echo "$MUP" | tr "/" "\n") #MEGA path splitted
-  PATH=""
+  CUR_PATH=""
 
   echo PATH_ARRAY $PATH_ARRAY
   SAVEIFS=${IFS}
@@ -19,23 +19,23 @@ _mega_mkdir_p() {
 '
   for LAST_DIR in ${PATH_ARRAY}; do
     #IFS=${SAVEIFS}
-    PATH="$PATH/$LAST_DIR"
+    CUR_PATH="$CUR_PATH/$LAST_DIR"
 
     $MSP test -u "$USER" -p "$PWD" -d  --reload "/Root" ## Refresh cache
-    $MSP test -u "$USER" -p "$PWD" -d "${PATH}"
+    $MSP test -u "$USER" -p "$PWD" -d "${CUR_PATH}"
     TEST="$?"
     echo test $TEST
-    if [ "$TEST" = 0 -o $PATH = '/Root' ]; then
+    if [ "$TEST" = 0 -o $CUR_PATH = '/Root' ]; then
       echo Dir exists
     else
-      echo Let\'s make $PATH
-      echo $MSP mkdir -u "$USER" -p "$PWD" "$PATH"
-      $MSP mkdir -u "$USER" -p "$PWD" "$PATH"
+      echo Let\'s make $CUR_PATH
+      echo $MSP mkdir -u "$USER" -p "$PWD" "$CUR_PATH"
+      $MSP mkdir -u "$USER" -p "$PWD" "$CUR_PATH"
     fi
 
   done
   IFS=${SAVEIFS}
-  echo $PATH
+  echo $CUR_PATH
 }
 ### /function mkdir_p
 #############################################################
@@ -53,7 +53,7 @@ _mega_copy_if_not_exist() {
   #echo $LSD LSD
   #  PATH_ARRAY=$(echo $MUP | tr "/" " ")
   PATH_ARRAY=$(echo "$MUP" | tr "/" "\n") #MEGA path splitted
-  PATH=""
+  CUR_PATH=""
 
   echo PATH_ARRAY $PATH_ARRAY
   SAVEIFS=${IFS}
@@ -63,17 +63,17 @@ _mega_copy_if_not_exist() {
     IFS=${SAVEIFS}
     echo LAST_DIR "$LAST_DIR"
     #IFS=${SAVEIFS}
-    BEFORE_LAST="$PATH"
-    PATH="$PATH/$LAST_DIR"
-    echo Path $PATH
+    BEFORE_LAST="$CUR_PATH"
+    CUR_PATH="$CUR_PATH/$LAST_DIR"
+    echo Path $CUR_PATH
     $MSP test -u "$USER" -p "$PWD" -d  --reload "/Root" ## Refresh cache
-    $MSP test -u "$USER" -p "$PWD" -d "${PATH}"
+    $MSP test -u "$USER" -p "$PWD" -d "${CUR_PATH}"
     TEST="$?"
     echo test $TEST
-    if [ "$TEST" = 0 -o "$PATH" = '/Root' ]; then
+    if [ "$TEST" = 0 -o "$CUR_PATH" = '/Root' ]; then
       echo Dir exists
     else
-      echo Let\'s copy $PATH
+      echo Let\'s copy $CUR_PATH
       echo BEFORE_LAST "${BEFORE_LAST}"
       $MSP mkdir -u "$USER" -p "$PWD" "${BEFORE_LAST}/${LAST_DIR}"
       echo copy --local "${LPTH}/${LAST_DIR}" --remote "${BEFORE_LAST}"
@@ -81,14 +81,14 @@ _mega_copy_if_not_exist() {
 
     fi
   done
-  if [ -n "$LSD"  -a "$PATH" = "$MUP" ]; then
+  if [ -n "$LSD"  -a "$CUR_PATH" = "$MUP" ]; then
       echo copy --local "${LPTH}" --remote "${BEFORE_LAST}"
       $MSP copy -u "$USER" -p "$PWD" --local "${LPTH}" --remote "${BEFORE_LAST}/${LAST_DIR}/${LSD}"
   else
       echo Nista!
   fi
 
-  echo return PATH $PATH
+  echo return CUR_PATH $CUR_PATH
   echo return BEFORE_LAST $BEFORE_LAST
 }
 ### /function _mega_copy_if_not_exist

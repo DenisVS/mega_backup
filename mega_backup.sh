@@ -6,16 +6,10 @@
 # c:/Users/master/Documents/Projects|/Root/Backup2|0    copy every directories into new DATE-TIME directory
 #PATH=$(echo /usr/local/bin:/usr/bin)
 
-#. ./config.sh
-#. ./functions.sh
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/functions.sh"
 
-
-
-
-
-
+##### FILES
 SAVEIFS=${IFS}
 IFS='
 '
@@ -40,17 +34,14 @@ for CURRENT_ELEMENT in ${BACKUP_OBJECT_2}; do
     IFS=${SAVEIFS}
     echo $FILE_NAME ss
     echo sent "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH--"$FILE_NAME"---> function copy"
-    _mega_copyfile_if_not_exist "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH" "$FILE_NAME" "1"
+    _mega_copy_if_not_exist "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH" "$FILE_NAME" "1"
   done
-
-  exit
 
   echo -------------------------
 done
-exit
 
 ###########################
-
+### DIRS AS IS, ADD MISSING
 SAVEIFS=${IFS}
 IFS='
 '
@@ -78,6 +69,8 @@ for CURRENT_ELEMENT in ${BACKUP_OBJECT_0}; do
   IFS=${SAVEIFS}
   echo -------------------------
 done
+
+### TO DATE DIR
 
 SAVEIFS=${IFS}
 IFS='

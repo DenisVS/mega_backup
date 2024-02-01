@@ -23,7 +23,11 @@ mega_server_backup_paths.ini:
 c:/cygwin64/var/cache|/Root/SDF4/AA|0
 c:/Users/Fred/Documents|/Root/Fred/Docs|1
 c:/Shares|/Root/Backup2/Shares|0
-c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|1
+c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|2
+
+#/from/here/all/new/subdirs|/to/here/as/new/subdirs|0
+#/all/from/this/dir|/into/dated/dir/under/this/one|1
+#/all/files/from/this/dir|/into/this/dir|2
 ```
 1-st column is local path 
 2-nd column is mega path (Should be started as `/Root`)

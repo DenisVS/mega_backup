@@ -43,7 +43,7 @@ _mega_mkdir_p() {
 
 ###################################################
 ### function _mega_copy_if_not_exist
-_mega_copy_if_not_exist() {
+_mega_copy_if_not_exist_BAK() {
   MSP=$1    # Megatool Software Path
   USER=$2   # User login
   PWD=$3    # User password
@@ -96,7 +96,7 @@ _mega_copy_if_not_exist() {
 
 ###################################################
 ### function _mega_copyfile_if_not_exist
-_mega_copyfile_if_not_exist() {
+_mega_copy_if_not_exist() {
   MSP=$1      # Megatool Software Path
   USER=$2     # User login
   PWD=$3      # User password
@@ -141,7 +141,7 @@ _mega_copyfile_if_not_exist() {
 
     fi
   done
-  ### CLAUSE copy file if (find what is it)
+  ### CLAUSE copy file if option and ... (find what is it)
   if [ -n "$LSD" -a "$CUR_PATH" = "$MUP" -a "$OPTION" = "1" ]; then
     echo Its files!
 

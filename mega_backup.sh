@@ -11,6 +11,46 @@
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/functions.sh"
 
+
+
+
+
+
+SAVEIFS=${IFS}
+IFS='
+'
+for CURRENT_ELEMENT in ${BACKUP_OBJECT_2}; do
+  IFS=${SAVEIFS}
+  ELEMENT_LOCAL_PATH=$(echo $CURRENT_ELEMENT | awk -F "|" '{print $1}')
+  ELEMENT_CLOUD_PATH=$(echo $CURRENT_ELEMENT | awk -F "|" '{print $2}')
+  echo ELEMENT_LOCAL_PATH $ELEMENT_LOCAL_PATH
+  echo ELEMENT_CLOUD_PATH $ELEMENT_CLOUD_PATH
+
+  #FILENAME=`echo ${CURRENT_ARCHIVE} | awk -F '/' '{i = 1; for (--i; i >= 0; i--){ printf "%s\t",$(NF-i)} print ""}'`
+  #echo $FILENAME
+  _mega_mkdir_p "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH"
+
+  #local files
+  RESULT=$(find "$ELEMENT_LOCAL_PATH" -maxdepth 1 -mindepth 1 -type f | awk -F \/ '{print $NF}')
+
+  SAVEIFS=${IFS}
+  IFS='
+'
+  for FILE_NAME in ${RESULT}; do
+    IFS=${SAVEIFS}
+    echo $FILE_NAME ss
+    echo sent "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH--"$FILE_NAME"---> function copy"
+    _mega_copyfile_if_not_exist "$MEGATOOLS_PATH" "$USERNAME" "$PASSWORD" "$ELEMENT_CLOUD_PATH" "$ELEMENT_LOCAL_PATH" "$FILE_NAME" "1"
+  done
+
+  exit
+
+  echo -------------------------
+done
+exit
+
+###########################
+
 SAVEIFS=${IFS}
 IFS='
 '

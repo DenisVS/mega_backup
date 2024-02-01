@@ -21,4 +21,5 @@ echo u "$USERNAME" p "$PASSWORD"
 # Arrays of elements for backup from config file
 BACKUP_OBJECT_0=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($3==0)  print $1 "|" $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 BACKUP_OBJECT_1=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($3==1)  print $1 "|" $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+BACKUP_OBJECT_2=$(cat $MEGA_BACKUP_PATHS | grep -v \# | awk -F\| '{if($3==2)  print $1 "|" $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 

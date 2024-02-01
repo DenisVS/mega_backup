@@ -29,4 +29,5 @@ c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|1
 2-nd column is mega path (Should be started as `/Root`)
 3-rd column is mode of backup
   - 0 - copy missing subdirs
-  - 1 - copy all dirs to subdir with datelike name
+  - 1 - copy all dirs to subdir with date like name
+  - 3 - copy all files from this dir to OUTPUT dir 

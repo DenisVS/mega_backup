@@ -1,14 +1,6 @@
 Mega Backup
 
 
-```
-c:/cygwin64/var/cache|/Root/SDF4/AA|0
-c:/Users/Fred/Documents|/Root/Fred/Docs|1
-c:/Shares|/Root/Backup2/Shares|0
-c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|1
-```
-
-
 - `MEGATOOLS_PATH` - megatools execute file
 `MEGATOOLS_PATH='/cygdrive/c/megatools/megatools.exe'`
 
@@ -20,7 +12,6 @@ c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|1
 
 mega_server_backup_paths.ini:
 ```
-c:/cygwin64/var/cache|/Root/SDF4/AA|0
 c:/Users/Fred/Documents|/Root/Fred/Docs|1
 c:/Shares|/Root/Backup2/Shares|0
 c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|2

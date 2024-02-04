@@ -1,4 +1,5 @@
-Mega Backup
+# Mega Backup
+shell script for backup on MEGA https://mega.io
 
 
 - `MEGATOOLS_PATH` - megatools execute file

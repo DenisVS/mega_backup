@@ -27,3 +27,12 @@ c:/Users/Admin/Documents/Projects|/Root/Backup2/Projects|2
   - 0 - copy missing subdirs
   - 1 - copy all dirs to subdir with date like name
   - 3 - copy all files from this dir to OUTPUT dir 
+
+
+mega.ini:
+```
+# Uncomment following lines (remove #) and set your password/username
+[Login]
+Username = MyEmail
+Password = MyMegaPassword
+```
